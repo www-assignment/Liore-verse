@@ -147,6 +147,9 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .admin-brand {
@@ -189,6 +192,16 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
         .admin-content {
             display: flex;
             min-height: calc(100vh - 70px);
@@ -199,6 +212,8 @@
             background: white;
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
             padding: 20px 0;
+            transition: var(--transition);
+            z-index: 90;
         }
 
         .admin-menu {
@@ -234,6 +249,7 @@
             flex: 1;
             padding: 30px;
             background: var(--light-gray);
+            transition: var(--transition);
         }
 
         .page-title {
@@ -329,6 +345,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 600px;
         }
 
         th, td {
@@ -387,6 +404,7 @@
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
         .modal-content {
@@ -396,6 +414,8 @@
             max-width: 500px;
             padding: 30px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .modal-header {
@@ -443,14 +463,54 @@
             color: white;
         }
 
-        /* Responsive */
+        /* Mobile Sidebar Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 80;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .admin-sidebar {
+                width: 220px;
+            }
+        }
+
         @media (max-width: 768px) {
-            .admin-content {
-                flex-direction: column;
+            .menu-toggle {
+                display: block;
             }
             
             .admin-sidebar {
+                position: fixed;
+                top: 70px;
+                left: -250px;
+                height: calc(100vh - 70px);
+                width: 250px;
+                transition: left 0.3s ease;
+            }
+            
+            .admin-sidebar.active {
+                left: 0;
+            }
+            
+            .sidebar-overlay.active {
+                display: block;
+            }
+            
+            .admin-main {
+                padding: 20px;
                 width: 100%;
+            }
+            
+            .admin-main.sidebar-open {
+                margin-left: 0;
             }
             
             .form-row {
@@ -459,6 +519,75 @@
             
             .stats-cards {
                 grid-template-columns: 1fr;
+            }
+            
+            .page-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .page-title button {
+                align-self: stretch;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .admin-header {
+                padding: 15px 20px;
+            }
+            
+            .admin-main {
+                padding: 15px;
+            }
+            
+            .content-card {
+                padding: 20px;
+            }
+            
+            .stat-card {
+                padding: 15px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+            
+            th, td {
+                padding: 10px;
+                font-size: 14px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 3px;
+            }
+            
+            .btn-edit, .btn-delete {
+                padding: 4px 8px;
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .admin-title {
+                font-size: 18px;
+            }
+            
+            .admin-user span {
+                display: none;
+            }
+            
+            .page-title {
+                font-size: 20px;
+            }
+            
+            .stats-cards {
+                gap: 15px;
+            }
+            
+            .stat-number {
+                font-size: 24px;
             }
         }
     </style>
@@ -492,6 +621,9 @@
     <div class="admin-container" id="adminPanel">
         <header class="admin-header">
             <div class="admin-brand">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <img src="LIORE_VERSE_LOGO.png" alt="Liore Verse Logo">
                 <span class="admin-title">Liore Verse Admin</span>
             </div>
@@ -501,8 +633,11 @@
             </div>
         </header>
         
+        <!-- Sidebar Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        
         <div class="admin-content">
-            <aside class="admin-sidebar">
+            <aside class="admin-sidebar" id="adminSidebar">
                 <ul class="admin-menu">
                     <li><a href="#" class="active" data-page="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                     <li><a href="#" data-page="capOwners"><i class="fas fa-user"></i> Cap Owners</a></li>
@@ -511,7 +646,7 @@
                 </ul>
             </aside>
             
-            <main class="admin-main">
+            <main class="admin-main" id="adminMain">
                 <!-- Dashboard Page -->
                 <div class="page-content" id="dashboardPage">
                     <h2 class="page-title">Dashboard</h2>
@@ -707,6 +842,10 @@
         const loginForm = document.getElementById('loginForm');
         const errorMessage = document.getElementById('errorMessage');
         const logoutBtn = document.getElementById('logoutBtn');
+        const menuToggle = document.getElementById('menuToggle');
+        const adminSidebar = document.getElementById('adminSidebar');
+        const adminMain = document.getElementById('adminMain');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
         const adminMenuLinks = document.querySelectorAll('.admin-menu a');
         const pageContents = document.querySelectorAll('.page-content');
         
@@ -754,6 +893,20 @@
             showLoginScreen();
         });
 
+        // Mobile menu toggle
+        menuToggle.addEventListener('click', function() {
+            adminSidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+            adminMain.classList.toggle('sidebar-open');
+        });
+
+        // Close sidebar when clicking on overlay
+        sidebarOverlay.addEventListener('click', function() {
+            adminSidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+            adminMain.classList.remove('sidebar-open');
+        });
+
         // Navigation menu
         adminMenuLinks.forEach(link => {
             link.addEventListener('click', function(e) {
@@ -780,6 +933,13 @@
                 if (page === 'dashboard') {
                     updateDashboard();
                 }
+                
+                // Close sidebar on mobile after navigation
+                if (window.innerWidth <= 768) {
+                    adminSidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                    adminMain.classList.remove('sidebar-open');
+                }
             });
         });
 
@@ -791,6 +951,13 @@
         // Close modal buttons
         closeModal.addEventListener('click', closeOwnerModal);
         cancelBtn.addEventListener('click', closeOwnerModal);
+
+        // Close modal when clicking outside
+        ownerModal.addEventListener('click', function(e) {
+            if (e.target === ownerModal) {
+                closeOwnerModal();
+            }
+        });
 
         // Owner form submission
         ownerForm.addEventListener('submit', function(e) {
