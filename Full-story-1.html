@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="LIORE_VERSE_LOGO.png">
+  <title>Ken Saro-Wiwa Story - Liore Verse</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Playfair+Display:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #FFF2E2;
+      font-family: 'Montserrat', sans-serif;
+      color: #4F0C0C;
+      overflow-x: hidden;
+      line-height: 1.6;
+      scroll-behavior: smooth;
+    }
+
+
+    /* Page Entrance Animation */
+body {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+body.loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* Enhanced Logo Header */
+.logo-header {
+  background: linear-gradient(135deg, #FFF8F1 0%, #FFF2E2 50%, #FFECD6 100%);
+  padding: 2rem 0;
+  box-shadow: 0 4px 25px rgba(79, 12, 12, 0.08);
+  position: relative;
+  z-index: 100;
+  border-bottom: 1px solid rgba(142, 45, 45, 0.1);
+}
+
+.logo-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #8e2d2d, #4F0C0C, #8e2d2d);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Logo Image Styling */
+.logo-image-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-img {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ffffff;
+  box-shadow: 
+    0 8px 25px rgba(79, 12, 12, 0.15),
+    0 4px 12px rgba(142, 45, 45, 0.1);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  z-index: 2;
+}
+
+.logo-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90px;
+  height: 90px;
+  background: radial-gradient(circle, rgba(142, 45, 45, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+
+.logo-img:hover {
+  transform: scale(1.08) rotate(5deg);
+  box-shadow: 
+    0 12px 35px rgba(79, 12, 12, 0.25),
+    0 6px 18px rgba(142, 45, 45, 0.15);
+}
+
+.logo-img:hover + .logo-glow {
+  opacity: 1;
+}
+
+/* Logo Text Content */
+.logo-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.logo-text {
+  font-family: 'Montserrat', 'Arial Black', sans-serif;
+  font-weight: 900;
+  font-size: 2.2rem;
+  line-height: 1.1;
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  position: relative;
+}
+
+.logo-main {
+  color: #4F0C0C;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 4px rgba(79, 12, 12, 0.1);
+}
+
+.logo-accent {
+  color: #8e2d2d;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  position: relative;
+}
+
+.logo-accent::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #8e2d2d, #d4554d);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: expandLine 1.5s ease-out 0.5s forwards;
+}
+
+@keyframes expandLine {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Tagline Styling */
+.tagline-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-subtitle {
+  font-family: 'Georgia', serif;
+  font-size: 1rem;
+  color: #8e2d2d;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: 0.3px;
+  position: relative;
+  padding-left: 1rem;
+  opacity: 0;
+  animation: slideInLeft 0.8s ease-out 0.8s forwards;
+}
+
+.logo-subtitle::before {
+  content: '"';
+  position: absolute;
+  left: 0;
+  top: -2px;
+  font-size: 1.2rem;
+  color: #d4554d;
+  font-weight: bold;
+}
+
+.logo-subtitle::after {
+  content: '"';
+  position: absolute;
+  right: -8px;
+  top: -2px;
+  font-size: 1.2rem;
+  color: #d4554d;
+  font-weight: bold;
+}
+
+.tagline-decoration {
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, #8e2d2d, transparent);
+  border-radius: 1px;
+  opacity: 0;
+  animation: fadeIn 0.6s ease-out 1.2s forwards;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .logo-header {
+    padding: 1.5rem 0;
+  }
+  
+  .logo-container {
+    gap: 1rem;
+  }
+  
+  .logo-img {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .logo-glow {
+    width: 75px;
+    height: 75px;
+  }
+  
+  .logo-text {
+    font-size: 1.8rem;
+  }
+  
+  .logo-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .tagline-decoration {
+    width: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .logo-text {
+    font-size: 1.6rem;
+    justify-content: center;
+  }
+  
+  .tagline-wrapper {
+    justify-content: center;
+  }
+  
+  .logo-subtitle::before,
+  .logo-subtitle::after {
+    display: none;
+  }
+}
+
+    /* Stories Page Header */
+    .stories-header {
+      background: linear-gradient(135deg, rgba(79, 12, 12, 0.9) 0%, rgba(142, 45, 45, 0.85) 100%);
+      color: #FFF2E2;
+      text-align: center;
+      padding: 100px 20px 60px;
+      position: relative;
+      overflow: hidden;
+      margin-top: 0;
+    }
+    
+    .stories-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 极zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-极.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63极2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23f3d8d8' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+      opacity: 0.3;
+    }
+    
+    .stories-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+      font-weight: 800;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+    
+    .stories-header p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+      font-weight: 300;
+      position: relative;
+    }
+
+    /* Story Layout */
+    .story-section {
+      padding: 80px 0;
+      scroll-margin-top: 140px;
+    }
+    
+    .story-flex-container {
+      display: flex;
+      align-items: stretch;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+    
+    .story-image-container {
+      flex: 1;
+      min-height: 500px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .story-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    
+    .story-image-container:hover .story-image {
+      transform: scale(1.03);
+    }
+    
+    .image-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #f3d8d8 0%, #e6b8b8 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #8e2d2d;
+      font-family: 'Playfair Display', serif;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .image-placeholder i {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+    
+    .image-placeholder p {
+      max-width: 300px;
+      font-style: italic;
+    }
+    
+    .story-content {
+      flex: 1;
+      padding: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .story-tag-large {
+      display: inline-block;
+      background: #8e2d2d;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    
+    .story-content h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: #4F0C0C;
+      position: relative;
+      display: inline-block;
+    }
+    
+    .story-content h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 80px;
+      height: 3px;
+      background: #8e2d2d;
+    }
+    
+    .story-content p {
+      margin-bottom: 25px;
+      color: #555;
+      line-height: 1.8;
+      font-size: 1.1rem;
+    }
+    
+    .quote-highlight {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: #8e2d2d;
+      padding: 30px;
+      background: rgba(142, 45, 45, 0.05);
+      border-left: 4px solid #8e2d2d;
+      margin: 40px 0;
+      font-style: italic;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .back-to-top {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #4F0C0C;
+      color: white;
+      text-decoration: none;
+      border-radius: 30px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+      align-self: flex-start;
+    }
+    
+    .back-to-top:hover {
+      background-color: #6d1f1f;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .back-to-top i {
+      margin-right: 8px;
+    }
+
+    
+    /* Responsive Design */
+    @media (max-width: 968px) {
+      .story-image-container {
+        min-height: 400px;
+      }
+      
+      .story-content {
+        padding: 40px;
+      }
+      
+      .story-content h2 {
+        font-size: 2.2rem;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .logo-header {
+        padding: 1rem;
+      }
+      
+      .logo-container {
+        justify-content: center;
+      }
+      
+      .logo-text {
+        font-size: 1.6rem;
+      }
+      
+      .logo-subtitle {
+        display: none;
+      }
+      
+      .stories-header h1 {
+        font-size: 2.5rem;
+      }
+      
+      .story-flex-container {
+        flex-direction: column;
+      }
+      
+      .story-image-container {
+        min-height: 350px;
+        order: 1;
+      }
+      
+      .story-content {
+        order: 2;
+        padding: 30px;
+      }
+      
+      .quote-highlight {
+        font-size: 1.2rem;
+        padding: 20px;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .stories-header {
+        padding: 80px 20px 40px;
+      }
+      
+      .story-image-container {
+        min-height: 250px;
+      }
+      
+      .story-content {
+        padding: 20px;
+      }
+      
+      .story-content h2 {
+        font-size: 1.8rem;
+      }
+      
+      .logo-text {
+        font-size: 1.4rem;
+      }
+      
+      .logo-img {
+        width: 50px;
+        height: 50px;
+      }
+      
+      .quote-highlight {
+        font-size: 1.1rem;
+        padding: 15px;
+      }
+      
+      .social-links a {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Logo Header -->
+<header class="logo-header">
+  <div class="container logo-container">
+    <img src="LIORE_VERSE_LOGO.png" alt="Liore Verse Logo" class="logo-img">
+    <div class="logo-info">
+      <h1 class="logo-text">LIORE VERSE</h1>
+      
+    </div>
+  </div>
+</header>
+
+  <!-- Stories Page Header -->
+  <header class="stories-header">
+    <div class="container">
+      <h1>No Risk No Story</h1>
+      <p>A story of courage, sacrifice, and the power of one voice against injustice</p>
+    </div>
+  </header>
+
+  <!-- Stories Container -->
+  <main class="container">
+    <!-- Ken Saro-Wiwa Story -->
+    <section id="ken-saro-wiwa" class="story-section">
+      <div class="story-flex-container">
+        <div class="story-image-container">
+          <!-- Image container - replace with your image -->
+          <img src="Ken Saro-Wiwa.jpg" alt="Ken Saro-Wiwa" class="story-image">
+          
+          <!-- If image doesn't load, we'll show placeholder -->
+          <div class="image-placeholder" style="display:none;">
+            <i class="fas fa-image"></i>
+            <p>Image of Ken Saro-Wiwa</p>
+          </div>
+        </div>
+        
+        <div class="story-content">
+          <span class="story-tag-large">Activist • Writer • Martyr</span>
+          <h2>Ken Saro-Wiwa</h2>
+          <p>Imagine standing before the world, your voice echoing what millions are too scared to say. Ken Saro-Wiwa did just that. He fought against giants who polluted his people's land, knowing full well that speaking up could cost him everything. And it did.</p>
+          
+        
+          
+          <p>They silenced him, but they couldn't bury his courage. Today, his story reminds us that your voice is your weapon. And if it shakes the world, then the risk was worth it.</p>
+          
+          <p><b>No Risk, No Story.</b></p>
+          
+          <a href="#" class="back-to-top"><i class="fas fa-arrow-up"></i> Back to Top</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+
+      
+     
+
+  <script>
+    // Smooth scrolling for back to top button
+    document.querySelectorAll('.back-to-top').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+    
+    // Check if image loaded successfully, if not show placeholder
+    document.addEventListener('DOMContentLoaded', function() {
+      const storyImage = document.querySelector('.story-image');
+      const placeholder = document.querySelector('.image-placeholder');
+      
+      if (storyImage) {
+        storyImage.onerror = function() {
+          this.style.display = 'none';
+          if (placeholder) placeholder.style.display = 'flex';
+        };
+        
+        // Check if image actually loaded (naturalWidth will be 0 if image failed to load)
+        if (storyImage.complete && storyImage.naturalWidth === 0) {
+          storyImage.style.display = 'none';
+          if (placeholder) placeholder.style.display = 'flex';
+        }
+      }
+    });
+
+
+
+      // Page entrance effect
+  window.addEventListener("load", () => {
+    document.body.classList.add("loaded");
+  });
+
+  </script>
+</body>
+</html>

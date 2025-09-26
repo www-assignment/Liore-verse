@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liore Verse - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="LIORE_VERSE_LOGO.png">
+    <style>
+        :root {
+            --primary: #4F0C0C;
+            --secondary: #FFF2E2;
+            --accent: #f3d8d8;
+            --dark: #1A1A1A;
+            --gray: #8A8A8A;
+            --light-gray: #f5f5f5;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--light-gray);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Login Screen */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary) 0%, #8e2d2d 100%);
+            padding: 20px;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .login-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: block;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .login-subtitle {
+            color: var(--gray);
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 12, 12, 0.1);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #3a0909;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Admin Panel */
+        .admin-container {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .admin-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .admin-brand img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .admin-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .admin-user {
+            display: flex;
+            align-items: center;
+        }
+
+        .admin-user span {
+            margin-right: 10px;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .admin-content {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+
+        .admin-sidebar {
+            width: 250px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            padding: 20px 0;
+        }
+
+        .admin-menu {
+            list-style: none;
+        }
+
+        .admin-menu li {
+            margin-bottom: 5px;
+        }
+
+        .admin-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .admin-menu a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .admin-menu a:hover, .admin-menu a.active {
+            background: var(--accent);
+            color: var(--primary);
+            border-right: 3px solid var(--primary);
+        }
+
+        .admin-main {
+            flex: 1;
+            padding: 30px;
+            background: var(--light-gray);
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .page-title button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .page-title button i {
+            margin-right: 5px;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 20px;
+        }
+
+        .stat-icon.primary {
+            background: rgba(79, 12, 12, 0.1);
+            color: var(--primary);
+        }
+
+        .stat-icon.success {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+        }
+
+        .stat-icon.warning {
+            background: rgba(255, 193, 7, 0.1);
+            color: var(--warning);
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f9f9f9;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-edit, .btn-delete {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: var(--transition);
+        }
+
+        .btn-edit {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-edit:hover, .btn-delete:hover {
+            opacity: 0.8;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-cancel {
+            background: var(--gray);
+            color: white;
+        }
+
+        .btn-save {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-content {
+                flex-direction: column;
+            }
+            
+            .admin-sidebar {
+                width: 100%;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-box">
+            <img src="LIORE_VERSE_LOGO.png" alt="Liore Verse Logo" class="login-logo">
+            <h2 class="login-title">Admin Login</h2>
+            <p class="login-subtitle">Access the Liore Verse admin panel</p>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="Enter your username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="btn">Login</button>
+                <div class="error-message" id="errorMessage">Invalid username or password</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-container" id="adminPanel">
+        <header class="admin-header">
+            <div class="admin-brand">
+                <img src="LIORE_VERSE_LOGO.png" alt="Liore Verse Logo">
+                <span class="admin-title">Liore Verse Admin</span>
+            </div>
+            <div class="admin-user">
+                <span>Welcome, Admin</span>
+                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </header>
+        
+        <div class="admin-content">
+            <aside class="admin-sidebar">
+                <ul class="admin-menu">
+                    <li><a href="#" class="active" data-page="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#" data-page="capOwners"><i class="fas fa-user"></i> Cap Owners</a></li>
+                    <li><a href="#" data-page="products"><i class="fas fa-box"></i> Products</a></li>
+                    <li><a href="#" data-page="settings"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </aside>
+            
+            <main class="admin-main">
+                <!-- Dashboard Page -->
+                <div class="page-content" id="dashboardPage">
+                    <h2 class="page-title">Dashboard</h2>
+                    
+                    <div class="stats-cards">
+                        <div class="stat-card">
+                            <div class="stat-icon primary">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="stat-number" id="totalOwners">0</div>
+                            <div class="stat-label">Total Cap Owners</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon success">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <div class="stat-number" id="totalProducts">2</div>
+                            <div class="stat-label">Total Products</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon warning">
+                                <i class="fas fa-sync"></i>
+                            </div>
+                            <div class="stat-number">Drop 001</div>
+                            <div class="stat-label">Current Collection</div>
+                        </div>
+                    </div>
+                    
+                    <div class="content-card">
+                        <h3>Recent Cap Owners</h3>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Cap Name</th>
+                                        <th>Owner Name</th>
+                                        <th>Date Added</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentOwnersTable">
+                                    <!-- Will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Cap Owners Page -->
+                <div class="page-content" id="capOwnersPage" style="display: none;">
+                    <h2 class="page-title">
+                        Cap Owners
+                        <button id="addOwnerBtn"><i class="fas fa-plus"></i> Add New Owner</button>
+                    </h2>
+                    
+                    <div class="content-card">
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Cap Name</th>
+                                        <th>Owner Name</th>
+                                        <th>Story</th>
+                                        <th>Image</th>
+                                        <th>Date Added</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="capOwnersTable">
+                                    <!-- Will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Products Page -->
+                <div class="page-content" id="productsPage" style="display: none;">
+                    <h2 class="page-title">Products</h2>
+                    
+                    <div class="content-card">
+                        <p>Product management features coming soon. Currently displaying your existing products.</p>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Product Name</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Denim Baseball Cap</td>
+                                        <td>$30</td>
+                                        <td>Available</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Washed Baseball Cap</td>
+                                        <td>$30</td>
+                                        <td>Available</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Settings Page -->
+                <div class="page-content" id="settingsPage" style="display: none;">
+                    <h2 class="page-title">Settings</h2>
+                    
+                    <div class="content-card">
+                        <h3>Admin Account</h3>
+                        <form id="adminSettingsForm">
+                            <div class="form-group">
+                                <label for="adminUsername">Username</label>
+                                <input type="text" id="adminUsername" class="form-control" value="admin" readonly>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="adminPassword">New Password</label>
+                                <input type="password" id="adminPassword" class="form-control" placeholder="Leave blank to keep current password">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="adminPasswordConfirm">Confirm New Password</label>
+                                <input type="password" id="adminPasswordConfirm" class="form-control">
+                            </div>
+                            
+                            <button type="submit" class="btn">Update Settings</button>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Add/Edit Cap Owner Modal -->
+    <div class="modal" id="ownerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Add Cap Owner</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            
+            <form id="ownerForm">
+                <input type="hidden" id="ownerId">
+                
+                <div class="form-group">
+                    <label for="capName">Cap Name *</label>
+                    <input type="text" id="capName" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ownerName">Owner Name *</label>
+                    <input type="text" id="ownerName" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ownerStory">Story</label>
+                    <textarea id="ownerStory" class="form-control" rows="4" placeholder="Tell the story behind this cap..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="imageUrl">Image URL</label>
+                    <input type="text" id="imageUrl" class="form-control" placeholder="Paste image URL here">
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancel" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-save">Save Owner</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Admin credentials (in a real app, this would be handled server-side)
+        const ADMIN_CREDENTIALS = {
+            username: "admin",
+            password: "lioreverse2025"
+        };
+
+        // Cap owners data (stored in localStorage)
+        let capOwners = JSON.parse(localStorage.getItem('lioreCapOwners')) || [];
+
+        // DOM Elements
+        const loginScreen = document.getElementById('loginScreen');
+        const adminPanel = document.getElementById('adminPanel');
+        const loginForm = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const adminMenuLinks = document.querySelectorAll('.admin-menu a');
+        const pageContents = document.querySelectorAll('.page-content');
+        
+        // Dashboard elements
+        const totalOwners = document.getElementById('totalOwners');
+        const recentOwnersTable = document.getElementById('recentOwnersTable');
+        
+        // Cap owners elements
+        const capOwnersTable = document.getElementById('capOwnersTable');
+        const addOwnerBtn = document.getElementById('addOwnerBtn');
+        const ownerModal = document.getElementById('ownerModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const closeModal = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const ownerForm = document.getElementById('ownerForm');
+        const ownerId = document.getElementById('ownerId');
+        const capName = document.getElementById('capName');
+        const ownerName = document.getElementById('ownerName');
+        const ownerStory = document.getElementById('ownerStory');
+        const imageUrl = document.getElementById('imageUrl');
+
+        // Check if user is already logged in
+        if (localStorage.getItem('lioreAdminLoggedIn') === 'true') {
+            showAdminPanel();
+        }
+
+        // Login form submission
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                localStorage.setItem('lioreAdminLoggedIn', 'true');
+                showAdminPanel();
+            } else {
+                errorMessage.style.display = 'block';
+            }
+        });
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', function() {
+            localStorage.removeItem('lioreAdminLoggedIn');
+            showLoginScreen();
+        });
+
+        // Navigation menu
+        adminMenuLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links
+                adminMenuLinks.forEach(l => l.classList.remove('active'));
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Get the page to show
+                const page = this.getAttribute('data-page');
+                
+                // Hide all pages
+                pageContents.forEach(content => {
+                    content.style.display = 'none';
+                });
+                
+                // Show the selected page
+                document.getElementById(`${page}Page`).style.display = 'block';
+                
+                // If on dashboard, update stats
+                if (page === 'dashboard') {
+                    updateDashboard();
+                }
+            });
+        });
+
+        // Add new cap owner button
+        addOwnerBtn.addEventListener('click', function() {
+            openOwnerModal();
+        });
+
+        // Close modal buttons
+        closeModal.addEventListener('click', closeOwnerModal);
+        cancelBtn.addEventListener('click', closeOwnerModal);
+
+        // Owner form submission
+        ownerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const id = ownerId.value;
+            const capNameValue = capName.value;
+            const ownerNameValue = ownerName.value;
+            const ownerStoryValue = ownerStory.value;
+            const imageUrlValue = imageUrl.value;
+            
+            if (id) {
+                // Edit existing owner
+                const index = capOwners.findIndex(owner => owner.id === id);
+                if (index !== -1) {
+                    capOwners[index] = {
+                        id: id,
+                        cap_name: capNameValue,
+                        owner_name: ownerNameValue,
+                        story: ownerStoryValue,
+                        image_url: imageUrlValue,
+                        date_added: capOwners[index].date_added
+                    };
+                }
+            } else {
+                // Add new owner
+                const newOwner = {
+                    id: generateId(),
+                    cap_name: capNameValue,
+                    owner_name: ownerNameValue,
+                    story: ownerStoryValue,
+                    image_url: imageUrlValue,
+                    date_added: new Date().toISOString().split('T')[0]
+                };
+                
+                capOwners.unshift(newOwner);
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('lioreCapOwners', JSON.stringify(capOwners));
+            
+            // Update tables
+            updateCapOwnersTable();
+            updateDashboard();
+            
+            // Close modal
+            closeOwnerModal();
+        });
+
+        // Functions
+        function showLoginScreen() {
+            loginScreen.style.display = 'flex';
+            adminPanel.style.display = 'none';
+            loginForm.reset();
+            errorMessage.style.display = 'none';
+        }
+
+        function showAdminPanel() {
+            loginScreen.style.display = 'none';
+            adminPanel.style.display = 'block';
+            updateDashboard();
+            updateCapOwnersTable();
+        }
+
+        function updateDashboard() {
+            // Update total owners count
+            totalOwners.textContent = capOwners.length;
+            
+            // Update recent owners table
+            recentOwnersTable.innerHTML = '';
+            
+            const recentOwners = capOwners.slice(0, 5); // Show last 5 added
+            
+            if (recentOwners.length === 0) {
+                recentOwnersTable.innerHTML = '<tr><td colspan="4" style="text-align: center;">No cap owners added yet</td></tr>';
+            } else {
+                recentOwners.forEach(owner => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${owner.cap_name}</td>
+                        <td>${owner.owner_name}</td>
+                        <td>${owner.date_added}</td>
+                        <td>
+                            <button class="btn-edit" onclick="editOwner('${owner.id}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn-delete" onclick="deleteOwner('${owner.id}')"><i class="fas fa-trash"></i></button>
+                        </td>
+                    `;
+                    recentOwnersTable.appendChild(row);
+                });
+            }
+        }
+
+        function updateCapOwnersTable() {
+            capOwnersTable.innerHTML = '';
+            
+            if (capOwners.length === 0) {
+                capOwnersTable.innerHTML = '<tr><td colspan="6" style="text-align: center;">No cap owners added yet</td></tr>';
+            } else {
+                capOwners.forEach(owner => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${owner.cap_name}</td>
+                        <td>${owner.owner_name}</td>
+                        <td>${owner.story ? owner.story.substring(0, 50) + '...' : 'No story'}</td>
+                        <td>${owner.image_url ? '<i class="fas fa-image"></i>' : 'No image'}</td>
+                        <td>${owner.date_added}</td>
+                        <td class="action-buttons">
+                            <button class="btn-edit" onclick="editOwner('${owner.id}')"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="btn-delete" onclick="deleteOwner('${owner.id}')"><i class="fas fa-trash"></i> Delete</button>
+                        </td>
+                    `;
+                    capOwnersTable.appendChild(row);
+                });
+            }
+        }
+
+        function openOwnerModal(owner = null) {
+            if (owner) {
+                // Edit mode
+                modalTitle.textContent = 'Edit Cap Owner';
+                ownerId.value = owner.id;
+                capName.value = owner.cap_name;
+                ownerName.value = owner.owner_name;
+                ownerStory.value = owner.story || '';
+                imageUrl.value = owner.image_url || '';
+            } else {
+                // Add mode
+                modalTitle.textContent = 'Add Cap Owner';
+                ownerForm.reset();
+                ownerId.value = '';
+            }
+            
+            ownerModal.style.display = 'flex';
+        }
+
+        function closeOwnerModal() {
+            ownerModal.style.display = 'none';
+            ownerForm.reset();
+        }
+
+        function editOwner(id) {
+            const owner = capOwners.find(owner => owner.id === id);
+            if (owner) {
+                openOwnerModal(owner);
+            }
+        }
+
+        function deleteOwner(id) {
+            if (confirm('Are you sure you want to delete this cap owner?')) {
+                capOwners = capOwners.filter(owner => owner.id !== id);
+                localStorage.setItem('lioreCapOwners', JSON.stringify(capOwners));
+                updateCapOwnersTable();
+                updateDashboard();
+            }
+        }
+
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        // Make functions available globally for onclick handlers
+        window.editOwner = editOwner;
+        window.deleteOwner = deleteOwner;
+    </script>
+</body>
+</html>
