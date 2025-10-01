@@ -501,16 +501,15 @@
   margin-bottom: 20px;
 }
 
-.product-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: auto;
+/* Description Dropdown Styles */
+.description-dropdown {
+  margin-top: 15px;
+  width: 100%;
 }
 
-.product-cta {
-  display: inline-block;
-  padding: 12px 30px;
+.dropdown-btn {
+  width: 100%;
+  padding: 12px 20px;
   background: transparent;
   border: 2px solid white;
   color: white;
@@ -521,15 +520,59 @@
   letter-spacing: 1px;
   font-weight: 600;
   border-radius: 30px;
-  flex-grow: 1;
   text-align: center;
-  margin-right: 15px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.product-cta:hover {
-  background-color: white;
-  color: var(--dark);
-  transform: translateY(-3px);
+.dropdown-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-btn i {
+  transition: transform 0.3s ease;
+}
+
+.dropdown-btn.active i {
+  transform: rotate(180deg);
+}
+
+.dropdown-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+  margin-top: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 0 15px;
+}
+
+.dropdown-content.show {
+  max-height: 200px;
+  padding: 15px;
+}
+
+.dropdown-content ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+.dropdown-content li {
+  padding: 5px 0;
+  color: #ddd;
+  font-size: 14px;
+  position: relative;
+  padding-left: 15px;
+}
+
+.dropdown-content li:before {
+  content: "•";
+  color: var(--accent);
+  position: absolute;
+  left: 0;
 }
 
 .wishlist-btn {
@@ -543,6 +586,7 @@
   border-radius: 50%;
   transition: var(--transition);
   text-decoration: none;
+  margin-top: 15px;
 }
 
 .wishlist-btn:hover {
@@ -574,21 +618,6 @@
   
   .product-title {
     font-size: 20px;
-  }
-  
-  .product-actions {
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .product-cta {
-    margin-right: 0;
-    width: 100%;
-  }
-  
-  .wishlist-btn {
-    width: 100%;
-    border-radius: 30px;
   }
 }
 
@@ -1132,9 +1161,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="About-Us.html"><i class="fas fa-users me-1"></i> About Us</a>
                     </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="owners.html"><i class="fas fa-users me-1"></i> Owners</a>
-                    </li>
+                   
                 </ul>
                
                 <ul>
@@ -1208,10 +1235,24 @@
           <h3 class="product-title">Denim Baseball Cap</h3>
           
           <p class="product-price">$30</p>
-          <div class="product-actions">
-            <a class="product-cta">Adjustable</a>
-            
+          
+          <!-- Description Dropdown -->
+          <div class="description-dropdown">
+            <button class="dropdown-btn">
+              Description <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-content">
+              <ul>
+                <li>STRUCTURED FRONT PANEL</li>
+                <li>ADJUSTABLE</li>
+                
+              </ul>
+            </div>
           </div>
+          
+          
+            
+          </a>
         </div>
       </div>
       
@@ -1226,10 +1267,23 @@
           <h3 class="product-title">Washed Baseball Cap</h3>
         
           <p class="product-price">$30</p>
-          <div class="product-actions">
-            <a class="product-cta">Adjustable</a>
-           
+          
+          <!-- Description Dropdown -->
+          <div class="description-dropdown">
+            <button class="dropdown-btn">
+              Description <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-content">
+              <ul>
+                <li>UNSTRUCTURED FRONT PANEL</li>
+                <li>ADJUSTABLE</li>
+                
+              </ul>
+            </div>
           </div>
+          
+          
+          </a>
         </div>
       </div>
     </div>
@@ -1291,7 +1345,7 @@
                         <i class="fas fa-feather-alt"></i>
                     </div>
                     <h3 class="element-title">LEGACY</h3>
-                    <p>What story will you crkeate? Our pieces are designed to become part of your journey and legacy.</p>
+                    <p>What story will you create? Our pieces are designed to become part of your journey and legacy.</p>
                 </div>
             </div>
         </div>
@@ -1374,7 +1428,8 @@
             <a href="https://www.instagram.com/liore_verse?igsh=MXJhbjNqb2RoYWFvYQ==" target="_blank" data-aos="zoom-in" data-aos-delay="100"><i class="fab fa-instagram"></i></a>
             <a href="https://x.com/liore_verse" target="_blank" data-aos="zoom-in" data-aos-delay="200"><i class="fab fa-twitter"></i></a>
             <a href="https://www.facebook.com/share/19KJCxbZBk/?mibextid=wwXIfr" target="_blank" data-aos="zoom-in" data-aos-delay="300"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://pin.it/6EUbs3Msv" target="_blank" data-aos="zoom-in" data-aos-delay="400"><i class="fab fa-pinterest"></i></a>
+            <a href="https://www.tiktok.com/@liore_verse?_t=ZM-8xI0x9RgOFs&_r=1" target="_blank" data-aos="zoom-in" data-aos-delay="400"><i class="fab fa-tiktok"></i></a>
+            <a href="https://pin.it/6EUbs3Msv" target="_blank" data-aos="zoom-in" data-aos-delay="500"><i class="fab fa-pinterest"></i></a>
           </div>
         </div>
         
@@ -1433,6 +1488,22 @@
       window.addEventListener('load', function() {
         AOS.refresh();
       });
+      
+      // Description dropdown functionality
+      const dropdownBtns = document.querySelectorAll('.dropdown-btn');
+      
+      dropdownBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          // Toggle active class on button
+          this.classList.toggle('active');
+          
+          // Get the dropdown content
+          const dropdownContent = this.nextElementSibling;
+          
+          // Toggle the dropdown content
+          dropdownContent.classList.toggle('show');
+        });
+      });
     });
   </script>
 
@@ -1445,7 +1516,3 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
-
-
-
-
