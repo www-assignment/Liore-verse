@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="LIORE_VERSE_LOGO.png">
+    <script src="cloud-storage.js"></script>
     <style>
         :root {
             --primary: #4F0C0C;
@@ -1283,7 +1284,7 @@
         ];
 
         // Enhanced story owners data structure with social media
-        let storyOwners = JSON.parse(localStorage.getItem('lioreStoryOwners')) || [];
+        let storyOwners = [];
 
         // DOM Elements
         const loginScreen = document.getElementById('loginScreen');
@@ -1325,17 +1326,19 @@
         const socialLinksPreview = document.getElementById('socialLinksPreview');
 
         // Enhanced initialization
-        document.addEventListener('DOMContentLoaded', function() {
-            if (localStorage.getItem('lioreAdminLoggedIn') === 'true') {
-                showAdminPanel();
-            }
-            
-            // Add loading animation
-            document.body.style.opacity = '0';
-            setTimeout(() => {
-                document.body.style.transition = 'opacity 0.5s ease';
-                document.body.style.opacity = '1';
-            }, 100);
+document.addEventListener('DOMContentLoaded', async function() {
+    if (localStorage.getItem('lioreAdminLoggedIn') === 'true') {
+        // Load data from cloud storage
+        storyOwners = await cloudStorage.loadData();
+        showAdminPanel();
+    }
+    
+    // Add loading animation
+    document.body.style.opacity = '0';
+    setTimeout(() => {
+        document.body.style.transition = 'opacity 0.5s ease';
+        document.body.style.opacity = '1';
+    }, 100);
 
             // Add event listeners for social media preview
             [instagramHandle, facebookHandle, twitterHandle, tiktokHandle].forEach(input => {
@@ -1455,7 +1458,8 @@
         });
 
         // Enhanced owner form submission
-        ownerForm.addEventListener('submit', function(e) {
+       // Enhanced owner form submission
+ownerForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const id = ownerId.value;
@@ -1515,8 +1519,8 @@
                 showNotification('Owner added successfully', 'success');
             }
             
-            // Save to localStorage
-            localStorage.setItem('lioreStoryOwners', JSON.stringify(storyOwners));
+            // Save to cloud storage
+await cloudStorage.saveData(storyOwners);
             
             // Update tables
             updateStoryOwnersTable();

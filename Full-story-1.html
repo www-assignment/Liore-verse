@@ -7,6 +7,7 @@
   <title>Ken Saro-Wiwa Story - Liore Verse</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="cloud-storage.js"></script>
   <style>
     * {
       margin: 0;
@@ -1257,162 +1258,197 @@
   </footer>
 
   <script>
-    // Enhanced function to load and display story owners
-    function loadStoryOwners() {
+      // Enhanced function to load and display story owners
+    async function loadStoryOwners() {
       const storyId = 'ken-saro-wiwa';
       const container = document.getElementById('storyOwnerContainer');
       
-      // Get story owners from localStorage
-      const storyOwners = JSON.parse(localStorage.getItem('lioreStoryOwners')) || [];
       
-      // Find owners assigned to this story
-      const assignedOwners = storyOwners.filter(owner => 
-        owner.assigned_stories && owner.assigned_stories.includes(storyId)
-      );
+      // Show loading state
+      container.innerHTML = `
+        <div style="text-align: center; padding: 40px; color: var(--gray);">
+          <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 15px;"></i>
+          <p>Loading story owners...</p>
+        </div>
+      `;
       
-      if (assignedOwners.length === 0) {
-        container.innerHTML = `
-          <div class="no-owners-state">
-            <div class="no-owners-icon">
-              <i class="fas fa-user-friends"></i>
-            </div>
-            <h3>This Story Awaits Its Owners</h3>
-            <p>Be among the first to own this powerful story and share your connection to its legacy of courage and vision.</p>
-            <a href="Home.html" class="cta-button">
-              <i class="fas fa-compass"></i>
-              Explore Our Collection
-            </a>
-          </div>
-        `;
-        return;
-      }
-      
-      // If only one owner, display a centered card
-      if (assignedOwners.length === 1) {
-        const owner = assignedOwners[0];
-        container.innerHTML = `
-          <div class="owners-grid">
-            <div class="owner-card">
-              <div class="owner-image">
-                ${owner.image_url ? `
-                  <img src="${owner.image_url}" alt="${owner.owner_name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                  <div class="owner-image-placeholder" style="display:none;">
-                    <i class="fas fa-user"></i>
-                    <p>Portrait of ${owner.owner_name}</p>
-                  </div>
-                ` : `
-                  <div class="owner-image-placeholder">
-                    <i class="fas fa-user"></i>
-                    <p>Portrait of ${owner.owner_name}</p>
-                  </div>
-                `}
-                <div class="owner-badge">Story Owner</div>
+      try {
+        // Get story owners from cloud storage
+        const storyOwners = await cloudStorage.loadData();
+        
+        // Find owners assigned to this story
+        const assignedOwners = storyOwners.filter(owner => 
+          owner.assigned_stories && owner.assigned_stories.includes(storyId)
+        );
+        
+        if (assignedOwners.length === 0) {
+          container.innerHTML = `
+            <div class="no-owners-state">
+              <div class="no-owners-icon">
+                <i class="fas fa-user-friends"></i>
               </div>
-              <div class="owner-content">
-                <h3 class="owner-name">${owner.owner_name}</h3>
-                ${owner.story ? `
-                  <p class="owner-story">${owner.story}</p>
-                ` : `
-                  <p class="owner-story">This owner carries the legacy of this story forward, embodying the courage and vision that defines Liore Verse.</p>
-                `}
-                <div class="owner-date">
-                  <i class="far fa-calendar"></i> 
-                  Owner since: ${owner.date_added}
+              <h3>This Story Awaits Its Owners</h3>
+              <p>Be among the first to own this powerful story and share your connection to its legacy of courage and vision.</p>
+              <a href="Home.html" class="cta-button">
+                <i class="fas fa-compass"></i>
+                Explore Our Collection
+              </a>
+            </div>
+          `;
+          return;
+        }
+        
+        // If only one owner, display a centered card
+        if (assignedOwners.length === 1) {
+          const owner = assignedOwners[0];
+          const socialMediaLinks = generateStorySocialMediaLinks(owner.social_media);
+          
+          container.innerHTML = `
+            <div class="owners-grid">
+              <div class="owner-card">
+                <div class="owner-image">
+                  ${owner.image_url ? `
+                    <img src="${owner.image_url}" alt="${owner.owner_name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="owner-image-placeholder" style="display:none;">
+                      <i class="fas fa-user"></i>
+                      <p>Portrait of ${owner.owner_name}</p>
+                    </div>
+                  ` : `
+                    <div class="owner-image-placeholder">
+                      <i class="fas fa-user"></i>
+                      <p>Portrait of ${owner.owner_name}</p>
+                    </div>
+                  `}
+                  <div class="owner-badge">Story Owner</div>
+                </div>
+                <div class="owner-content">
+                  <h3 class="owner-name">${owner.owner_name}</h3>
+                  ${socialMediaLinks ? `
+                    <div class="owner-social-media">
+                      <h4>Connect with ${owner.owner_name.split(' ')[0]}:</h4>
+                      <div class="social-links-owner">
+                        ${socialMediaLinks}
+                      </div>
+                    </div>
+                  ` : ''}
+                  <div class="owner-date">
+                    <i class="far fa-calendar"></i> 
+                    Owner since: ${owner.date_added}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        `;
-      } 
-      // If multiple owners (2-4), display in horizontal scroll
-      else if (assignedOwners.length <= 4) {
-        container.innerHTML = `
-          <div class="multiple-owners-layout">
-            <div class="owners-group">
-              <h3 class="owners-group-title">
-                <i class="fas fa-users"></i>
-                ${assignedOwners.length} People Carry This Story
-              </h3>
-              <div class="owners-horizontal-scroll">
-                ${assignedOwners.map(owner => `
-                  <div class="owner-card-horizontal">
-                    <div class="owner-image-horizontal">
-                      ${owner.image_url ? `
-                        <img src="${owner.image_url}" alt="${owner.owner_name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="owner-image-placeholder" style="display:none;">
-                          <i class="fas fa-user"></i>
-                          <p>Portrait of ${owner.owner_name}</p>
+          `;
+        } 
+        // If multiple owners (2-4), display in horizontal scroll
+        else if (assignedOwners.length <= 4) {
+          container.innerHTML = `
+            <div class="multiple-owners-layout">
+              <div class="owners-group">
+                <h3 class="owners-group-title">
+                  <i class="fas fa-users"></i>
+                  ${assignedOwners.length} People Carry This Story
+                </h3>
+                <div class="owners-horizontal-scroll">
+                  ${assignedOwners.map(owner => {
+                    const socialMediaLinks = generateStorySocialMediaLinks(owner.social_media);
+                    return `
+                      <div class="owner-card-horizontal">
+                        <div class="owner-image-horizontal">
+                          ${owner.image_url ? `
+                            <img src="${owner.image_url}" alt="${owner.owner_name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="owner-image-placeholder" style="display:none;">
+                              <i class="fas fa-user"></i>
+                              <p>Portrait of ${owner.owner_name}</p>
+                            </div>
+                          ` : `
+                            <div class="owner-image-placeholder">
+                              <i class="fas fa-user"></i>
+                              <p>Portrait of ${owner.owner_name}</p>
+                            </div>
+                          `}
+                          <div class="owner-badge">Owner</div>
                         </div>
-                      ` : `
-                        <div class="owner-image-placeholder">
-                          <i class="fas fa-user"></i>
-                          <p>Portrait of ${owner.owner_name}</p>
+                        <div class="owner-content-horizontal">
+                          <h4 class="owner-name">${owner.owner_name}</h4>
+                          ${socialMediaLinks ? `
+                            <div class="owner-social-media">
+                              <div class="social-links-owner">
+                                ${socialMediaLinks}
+                              </div>
+                            </div>
+                          ` : ''}
+                          <div class="owner-date">
+                            <i class="far fa-calendar"></i> 
+                            ${owner.date_added}
+                          </div>
                         </div>
-                      `}
-                      <div class="owner-badge">Owner</div>
-                    </div>
-                    <div class="owner-content-horizontal">
-                      <h4 class="owner-name">${owner.owner_name}</h4>
-                      ${owner.story ? `
-                        <p class="owner-story">${owner.story.length > 120 ? owner.story.substring(0, 120) + '...' : owner.story}</p>
-                      ` : `
-                        <p class="owner-story">Carrying the legacy forward with courage and vision.</p>
-                      `}
-                      <div class="owner-date">
-                        <i class="far fa-calendar"></i> 
-                        ${owner.date_added}
                       </div>
-                    </div>
-                  </div>
-                `).join('')}
+                    `;
+                  }).join('')}
+                </div>
               </div>
             </div>
-          </div>
-        `;
-      }
-      // If many owners (5+), display in scrollable grid
-      else {
-        container.innerHTML = `
-          <div class="multiple-owners-layout">
-            <div class="owners-group">
-              <h3 class="owners-group-title">
-                <i class="fas fa-users"></i>
-                ${assignedOwners.length} People Carry This Story
-              </h3>
-              <div class="owners-grid-scrollable">
-                ${assignedOwners.map(owner => `
-                  <div class="owner-card">
-                    <div class="owner-image">
-                      ${owner.image_url ? `
-                        <img src="${owner.image_url}" alt="${owner.owner_name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="owner-image-placeholder" style="display:none;">
-                          <i class="fas fa-user"></i>
-                          <p>Portrait of ${owner.owner_name}</p>
+          `;
+        }
+        // If many owners (5+), display in scrollable grid
+        else {
+          container.innerHTML = `
+            <div class="multiple-owners-layout">
+              <div class="owners-group">
+                <h3 class="owners-group-title">
+                  <i class="fas fa-users"></i>
+                  ${assignedOwners.length} People Carry This Story
+                </h3>
+                <div class="owners-grid-scrollable">
+                  ${assignedOwners.map(owner => {
+                    const socialMediaLinks = generateStorySocialMediaLinks(owner.social_media);
+                    return `
+                      <div class="owner-card">
+                        <div class="owner-image">
+                          ${owner.image_url ? `
+                            <img src="${owner.image_url}" alt="${owner.owner_name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="owner-image-placeholder" style="display:none;">
+                              <i class="fas fa-user"></i>
+                              <p>Portrait of ${owner.owner_name}</p>
+                            </div>
+                          ` : `
+                            <div class="owner-image-placeholder">
+                              <i class="fas fa-user"></i>
+                              <p>Portrait of ${owner.owner_name}</p>
+                            </div>
+                          `}
+                          <div class="owner-badge">Owner</div>
                         </div>
-                      ` : `
-                        <div class="owner-image-placeholder">
-                          <i class="fas fa-user"></i>
-                          <p>Portrait of ${owner.owner_name}</p>
+                        <div class="owner-content">
+                          <h4 class="owner-name">${owner.owner_name}</h4>
+                          ${socialMediaLinks ? `
+                            <div class="owner-social-media">
+                              <div class="social-links-owner">
+                                ${socialMediaLinks}
+                              </div>
+                            </div>
+                          ` : ''}
+                          <div class="owner-date">
+                            <i class="far fa-calendar"></i> 
+                            ${owner.date_added}
+                          </div>
                         </div>
-                      `}
-                      <div class="owner-badge">Owner</div>
-                    </div>
-                    <div class="owner-content">
-                      <h4 class="owner-name">${owner.owner_name}</h4>
-                      ${owner.story ? `
-                        <p class="owner-story">${owner.story.length > 100 ? owner.story.substring(0, 100) + '...' : owner.story}</p>
-                      ` : `
-                        <p class="owner-story">Carrying the legacy forward with courage and vision.</p>
-                      `}
-                      <div class="owner-date">
-                        <i class="far fa-calendar"></i> 
-                        ${owner.date_added}
                       </div>
-                    </div>
-                  </div>
-                `).join('')}
+                    `;
+                  }).join('')}
+                </div>
               </div>
             </div>
+          `;
+        }
+        
+      } catch (error) {
+        console.error('Error loading story owners:', error);
+        container.innerHTML = `
+          <div style="text-align: center; padding: 40px; color: var(--danger);">
+            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 15px;"></i>
+            <p>Unable to load story owners. Please check your connection.</p>
           </div>
         `;
       }
@@ -1420,8 +1456,6 @@
 
     // Load story owners when the page loads
     document.addEventListener('DOMContentLoaded', function() {
-      loadStoryOwners();
-      
       // Your existing DOMContentLoaded code
       const storyImage = document.querySelector('.story-image');
       const placeholder = document.querySelector('.image-placeholder');
@@ -1493,183 +1527,8 @@
 
 
 
-    // Enhanced function to load and display story owners
-function loadStoryOwners() {
-  const storyId = 'ken-saro-wiwa';
-  const container = document.getElementById('storyOwnerContainer');
-  
-  // Get story owners from localStorage
-  const storyOwners = JSON.parse(localStorage.getItem('lioreStoryOwners')) || [];
-  
-  // Find owners assigned to this story
-  const assignedOwners = storyOwners.filter(owner => 
-    owner.assigned_stories && owner.assigned_stories.includes(storyId)
-  );
-  
-  if (assignedOwners.length === 0) {
-    container.innerHTML = `
-      <div class="no-owners-state">
-        <div class="no-owners-icon">
-          <i class="fas fa-user-friends"></i>
-        </div>
-        <h3>This Story Awaits Its Owners</h3>
-        <p>Be among the first to own this powerful story and share your connection to its legacy of courage and vision.</p>
-        <a href="Home.html" class="cta-button">
-          <i class="fas fa-compass"></i>
-          Explore Our Collection
-        </a>
-      </div>
-    `;
-    return;
-  }
-  
-  // If only one owner, display a centered card
-  if (assignedOwners.length === 1) {
-    const owner = assignedOwners[0];
-    const socialMediaLinks = generateStorySocialMediaLinks(owner.social_media);
-    
-    container.innerHTML = `
-      <div class="owners-grid">
-        <div class="owner-card">
-          <div class="owner-image">
-            ${owner.image_url ? `
-              <img src="${owner.image_url}" alt="${owner.owner_name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-              <div class="owner-image-placeholder" style="display:none;">
-                <i class="fas fa-user"></i>
-                <p>Portrait of ${owner.owner_name}</p>
-              </div>
-            ` : `
-              <div class="owner-image-placeholder">
-                <i class="fas fa-user"></i>
-                <p>Portrait of ${owner.owner_name}</p>
-              </div>
-            `}
-            <div class="owner-badge">Story Owner</div>
-          </div>
-          <div class="owner-content">
-            <h3 class="owner-name">${owner.owner_name}</h3>
-            ${socialMediaLinks ? `
-              <div class="owner-social-media">
-                <h4>Connect with ${owner.owner_name.split(' ')[0]}:</h4>
-                <div class="social-links-owner">
-                  ${socialMediaLinks}
-                </div>
-              </div>
-            ` : ''}
-            <div class="owner-date">
-              <i class="far fa-calendar"></i> 
-              Owner since: ${owner.date_added}
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-  } 
-  // If multiple owners (2-4), display in horizontal scroll
-  else if (assignedOwners.length <= 4) {
-    container.innerHTML = `
-      <div class="multiple-owners-layout">
-        <div class="owners-group">
-          <h3 class="owners-group-title">
-            <i class="fas fa-users"></i>
-            ${assignedOwners.length} People Carry This Story
-          </h3>
-          <div class="owners-horizontal-scroll">
-            ${assignedOwners.map(owner => {
-              const socialMediaLinks = generateStorySocialMediaLinks(owner.social_media);
-              return `
-                <div class="owner-card-horizontal">
-                  <div class="owner-image-horizontal">
-                    ${owner.image_url ? `
-                      <img src="${owner.image_url}" alt="${owner.owner_name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                      <div class="owner-image-placeholder" style="display:none;">
-                        <i class="fas fa-user"></i>
-                        <p>Portrait of ${owner.owner_name}</p>
-                      </div>
-                    ` : `
-                      <div class="owner-image-placeholder">
-                        <i class="fas fa-user"></i>
-                        <p>Portrait of ${owner.owner_name}</p>
-                      </div>
-                    `}
-                    <div class="owner-badge">Owner</div>
-                  </div>
-                  <div class="owner-content-horizontal">
-                    <h4 class="owner-name">${owner.owner_name}</h4>
-                    ${socialMediaLinks ? `
-                      <div class="owner-social-media">
-                        <div class="social-links-owner">
-                          ${socialMediaLinks}
-                        </div>
-                      </div>
-                    ` : ''}
-                    <div class="owner-date">
-                      <i class="far fa-calendar"></i> 
-                      ${owner.date_added}
-                    </div>
-                  </div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        </div>
-      </div>
-    `;
-  }
-  // If many owners (5+), display in scrollable grid
-  else {
-    container.innerHTML = `
-      <div class="multiple-owners-layout">
-        <div class="owners-group">
-          <h3 class="owners-group-title">
-            <i class="fas fa-users"></i>
-            ${assignedOwners.length} People Carry This Story
-          </h3>
-          <div class="owners-grid-scrollable">
-            ${assignedOwners.map(owner => {
-              const socialMediaLinks = generateStorySocialMediaLinks(owner.social_media);
-              return `
-                <div class="owner-card">
-                  <div class="owner-image">
-                    ${owner.image_url ? `
-                      <img src="${owner.image_url}" alt="${owner.owner_name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                      <div class="owner-image-placeholder" style="display:none;">
-                        <i class="fas fa-user"></i>
-                        <p>Portrait of ${owner.owner_name}</p>
-                      </div>
-                    ` : `
-                      <div class="owner-image-placeholder">
-                        <i class="fas fa-user"></i>
-                        <p>Portrait of ${owner.owner_name}</p>
-                      </div>
-                    `}
-                    <div class="owner-badge">Owner</div>
-                  </div>
-                  <div class="owner-content">
-                    <h4 class="owner-name">${owner.owner_name}</h4>
-                    ${socialMediaLinks ? `
-                      <div class="owner-social-media">
-                        <div class="social-links-owner">
-                          ${socialMediaLinks}
-                        </div>
-                      </div>
-                    ` : ''}
-                    <div class="owner-date">
-                      <i class="far fa-calendar"></i> 
-                      ${owner.date_added}
-                    </div>
-                  </div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        </div>
-      </div>
-    `;
-  }
-}
 
-// Function to generate social media links for story pages
+    // Function to generate social media links for story pages
 function generateStorySocialMediaLinks(socialMedia) {
   const links = [];
   
@@ -1716,6 +1575,9 @@ function generateStorySocialMediaLinks(socialMedia) {
   
   return links.length > 0 ? links.join('') : '';
 }
+
+
+    
   </script>
 </body>
 </html>
