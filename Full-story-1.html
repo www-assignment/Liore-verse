@@ -1455,8 +1455,8 @@
       }
     }
 
-    // Load story owners when the page loads
-    document.addEventListener('DOMContentLoaded', function() {
+   // Load story owners when the page loads
+    document.addEventListener('DOMContentLoaded', async function() {
       // Your existing DOMContentLoaded code
       const storyImage = document.querySelector('.story-image');
       const placeholder = document.querySelector('.image-placeholder');
@@ -1477,8 +1477,13 @@
       window.addEventListener("load", () => {
         document.body.classList.add("loaded");
       });
+
+      // CRITICAL FIX: Load story owners immediately
+      await loadStoryOwners();
     });
 
+
+    
     // Refresh story owners display when coming back from admin panel
     window.addEventListener('storage', function(e) {
       if (e.key === 'lioreStoryOwners') {
